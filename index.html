@@ -286,7 +286,7 @@
             font-weight: 400;
             color: var(--text-secondary);
             line-height: 1.6;
-            max-width: 440px;
+            max-width: 500px;
         }
         .hero-author {
             font-family: var(--font-display);
@@ -1185,28 +1185,24 @@
         </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- Hero Section (The Long Game) -->
     <section class="hero" id="hero">
         <div class="hero-content">
             <span class="hero-badge animate-in delay-1">New Release • Hukm Qalbi Publishing</span>
-            <h1 class="hero-title animate-in delay-2">Hukm Qalbi</h1>
+            <h1 class="hero-title animate-in delay-2">The Long<br>Game</h1>
             <p class="hero-author animate-in delay-2">by Saalim Zayed</p>
             <p class="hero-subtitle animate-in delay-3">
-                Merge Your Deen & Dunya with Purposeful Productivity. A transformative guide to aligning
-                your spiritual and worldly goals for a life of meaning, balance, and impact.
+                Moving Beyond the Checkpoint Mindset — Why So Many Young People Have No Long-Term Vision for Their Lives.
             </p>
             <div class="hero-actions animate-in delay-4">
-                <a href="https://saalimzayed.github.io/HUKMQALBI/" target="_blank" rel="noopener" class="btn btn-primary">
+                <a href="https://zayed-saalim.github.io/the-long-game/" target="_blank" rel="noopener" class="btn btn-primary">
                     Explore the Book →
                 </a>
-                <button class="btn btn-outline" onclick="addToCart('featured')">
-                    Add to Bag — $24.99
-                </button>
             </div>
         </div>
         <div class="hero-visual animate-in delay-2">
-            <a href="https://saalimzayed.github.io/HUKMQALBI/" target="_blank" rel="noopener" class="hero-book-link">
-                <img src="hqb.png" alt="Hukm Qalbi - Merge Your Deen & Dunya with Purposeful Productivity" class="hero-book-img">
+            <a href="https://zayed-saalim.github.io/the-long-game/" target="_blank" rel="noopener" class="hero-book-link">
+                <img src="tlg.png" alt="The Long Game - Moving Beyond the Checkpoint Mindset" class="hero-book-img">
             </a>
         </div>
     </section>
@@ -1364,7 +1360,7 @@
             image: 'hqb.png',
             link: 'https://saalimzayed.github.io/HUKMQALBI/',
             publisher: 'Hukm Qalbi Publishing',
-            isFeatured: true
+            isFeatured: false
         }, {
             id: 'the-long-game',
             title: 'The Long Game',
@@ -1373,12 +1369,14 @@
             price: 19.99,
             image: 'tlg.png',
             link: 'https://zayed-saalim.github.io/the-long-game/',
-            publisher: 'Hukm Qalbi Publishing'
+            publisher: 'Hukm Qalbi Publishing',
+            isFeatured: true
         }];
 
         // ─── Cart State ─────────────────────────────
         let cart = [];
-        const featuredBook = books[0];
+        // The featured book for the hero is now 'The Long Game'
+        const featuredBook = books.find(b => b.isFeatured);
 
         function getCartItem(id) {
             return cart.find(item => item.id === id);
@@ -1393,12 +1391,7 @@
         }
 
         function addToCart(bookId) {
-            let book;
-            if (bookId === 'featured') {
-                book = featuredBook;
-            } else {
-                book = books.find(b => b.id === bookId);
-            }
+            const book = books.find(b => b.id === bookId);
             if (!book) return;
 
             const existing = getCartItem(book.id);
@@ -1409,7 +1402,6 @@
             }
             updateCartUI();
             showToast(`"${book.title}" added to bag`);
-            // Brief animation on the bag icon
             const bagBtn = document.getElementById('bagBtn');
             bagBtn.style.transform = 'scale(1.15)';
             setTimeout(() => { bagBtn.style.transform = 'scale(1)'; }, 180);
@@ -1441,7 +1433,6 @@
                 bagCount.classList.remove('visible');
             }
 
-            // Update cart panel
             const cartItemsEl = document.getElementById('cartItems');
             const cartFooter = document.getElementById('cartFooter');
             const cartTotal = document.getElementById('cartTotal');
@@ -1493,21 +1484,7 @@
                 }
             });
 
-            // Update featured hero button
-            const heroOutlineBtn = document.querySelector('.btn-outline');
-            if (heroOutlineBtn && getCartItem(featuredBook.id)) {
-                heroOutlineBtn.textContent = 'In Your Bag ✓';
-                heroOutlineBtn.style.background = '#1d1d1f';
-                heroOutlineBtn.style.color = '#fff';
-                heroOutlineBtn.style.borderColor = '#1d1d1f';
-                heroOutlineBtn.style.pointerEvents = 'none';
-            } else if (heroOutlineBtn) {
-                heroOutlineBtn.textContent = 'Add to Bag — $24.99';
-                heroOutlineBtn.style.background = 'transparent';
-                heroOutlineBtn.style.color = 'var(--text)';
-                heroOutlineBtn.style.borderColor = 'var(--border)';
-                heroOutlineBtn.style.pointerEvents = 'auto';
-            }
+            // No hero button to update because the add-to-bag button has been removed.
         }
 
         // ─── Render Book Grid ──────────────────────
@@ -1537,7 +1514,6 @@
                 </div>
             `).join('');
 
-            // Trigger animations
             requestAnimationFrame(() => {
                 document.querySelectorAll('.book-card.animate-in').forEach(card => {
                     card.style.opacity = '1';
@@ -1556,7 +1532,6 @@
             cartPanel.classList.add('open');
             cartOverlay.classList.add('open');
             document.body.classList.add('cart-open');
-            // Calculate scrollbar width
             const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
             document.body.style.setProperty('--scrollbar-width', scrollbarWidth + 'px');
         }
@@ -1571,7 +1546,6 @@
         cartClose.addEventListener('click', closeCart);
         cartOverlay.addEventListener('click', closeCart);
 
-        // Close cart with Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && cartPanel.classList.contains('open')) {
                 closeCart();
@@ -1601,15 +1575,12 @@
 
         // ─── Nav Scroll Effect ─────────────────────
         const navbar = document.getElementById('navbar');
-        let lastScrollY = 0;
         window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            if (scrollY > 30) {
+            if (window.scrollY > 30) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
-            lastScrollY = scrollY;
         }, { passive: true });
 
         // ─── Intersection Observer for Animations ──
@@ -1623,7 +1594,6 @@
             });
         }, observerOptions);
 
-        // Observe hero animated elements
         document.querySelectorAll('.animate-in').forEach(el => {
             observer.observe(el);
         });
@@ -1632,7 +1602,6 @@
         renderBookGrid();
         updateCartUI();
 
-        // Set initial scroll state
         if (window.scrollY > 30) {
             navbar.classList.add('scrolled');
         }
